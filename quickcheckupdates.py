@@ -19,6 +19,13 @@ class DebugPrinter:
         if self._verbosity >= min_verbosity:
             print(message)
     
+    # Prints a message so that it gets overwritten (an example is for a downloading feed message)
+    # Make sure the next message is longer than this one, else part of it will be left on the terminal
+    def transient(self, message, min_verbosity):
+        if self._verbosity >= min_verbosity:
+            print(message, end='\r', flush=True)
+        
+    
     def __init__(self, verbosity):
         self._verbosity = verbosity
 
@@ -34,8 +41,16 @@ def main():
     
     feed_url = args.feed_url
     debug.info(f"Feed url is {feed_url}", 1)
-    
     debug.info(f"Verbosity is {args.verbose}", 1)
+    
+    # The arguments have been parsed
+    # Fetch the feed
+    debug.transient("Fetching feed...\r",1)
+    parsed_feed = feedparser.parse(feed_url)
+    debug.info(f"Feed’s title is “{parsed_feed['feed']['title']}”",1)
+    
+    # Count number of entries
+    debug.info(f"There are {len(parsed_feed.entries)} entries in this feed.", 1)
 
 if __name__ == '__main__':
     main()
