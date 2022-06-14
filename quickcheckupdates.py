@@ -12,14 +12,30 @@ import argparse
 # This line just stores the default, you can use the --feed-url argument to change it
 RSS_FEED_URL = "https://archlinux.org/feeds/packages/all/stable-repos/"
 
+class DebugPrinter:
+    _verbosity = 0
+    
+    def info(self, message, min_verbosity):
+        if self._verbosity >= min_verbosity:
+            print(message)
+    
+    def __init__(self, verbosity):
+        self._verbosity = verbosity
+
 def main():
+    # Parse CLI arguments
     parser = argparse.ArgumentParser(description="Quickly check for Arch Linux updates")
     parser.add_argument('--feed-url', help=f"URL of the feed you want to use, default is {RSS_FEED_URL} (all stable Arch repos)", dest="feed_url", type=str, default=RSS_FEED_URL)
+    parser.add_argument('--verbose', '-v', action='count', default=0, help="Verbose output. May be specified multiple times for even more output")
     
     args = parser.parse_args()
     
+    debug = DebugPrinter(args.verbose)
+    
     feed_url = args.feed_url
-    print(f"feed url is {feed_url}")
+    debug.info(f"Feed url is {feed_url}", 1)
+    
+    debug.info(f"Verbosity is {args.verbose}", 1)
 
 if __name__ == '__main__':
     main()
