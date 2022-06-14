@@ -78,7 +78,8 @@ def main():
             if pkg_names.index(package_name) != 0:
                 # If it is, check the version
                 # For simplicity, just check if the version is different
-                if new_version != pkg_versions:
+                if new_version != pkg_versions[index]:
+                    debug.info(f"Package: {package_name}, {pkg_versions[index]} → {new_version}", 1)
                     updated.append((pkg_names[index], pkg_versions[index]))
         except ValueError: # from not having it installed
             continue
@@ -87,6 +88,8 @@ def main():
     
     # If nothing, return 2 (like checkupdates)
     if len(updated) == 0:
+        if not args.quiet:
+            print("No updates in feed.\n(but since the feed only has a limited number of entries, there could be some updates anyway)")
         exit(2)
     
     for package in updated:
