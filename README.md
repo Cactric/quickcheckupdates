@@ -10,5 +10,6 @@ Quickly check for Arch Linux updates (with some caveats)
 
 ## Dependencies:
 You need (Arch packages):
+* `python`
 * `python-feedparser`
 * `pyalpm`
